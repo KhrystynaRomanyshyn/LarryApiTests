@@ -1,0 +1,1248 @@
+{
+	"info": {
+		"_postman_id": "b06e07d3-16f9-4561-ae56-b50c9221d051",
+		"name": "LarryApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2316592"
+	},
+	"item": [
+		{
+			"name": "LoginFailTotal_NoParameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate that the endpoint returns data for all users when no parameters are specified.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"userName should not be empty\");\r",
+							"    pm.expect(data.failCount).to.greaterThan(-1, \"failCount should be greater than or equal to 0\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(10, \"response data should contain 10 users\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_UserNameFilter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the endpoint returns data for the specified user.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"\r",
+							"  pm.expect(responseData[0].userName).to.be.equal(\"Joe\", \"user name should be Joe\");\r",
+							"  pm.expect(responseData[0].failCount).to.greaterThan(-1, \"failCount should be greater than or equal to 0\");\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(1, \"response data should contain 1 user\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?user_name=Joe",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "user_name",
+							"value": "Joe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FailCountFilter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ensure that only users with failed login attempts above the specified fail_count are returned.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"userName should not be empty\");\r",
+							"    pm.expect(data.failCount).to.greaterThan(3, \"failCount should be greater than or equal to 4\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(9, \"response data should contain 9 users\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fail_count=4",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fail_count",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FetchLimitFilter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ensure that endpoint returns no more than fetch_limit entities.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"userName should not be empty\");\r",
+							"    pm.expect(data.failCount).to.greaterThan(-1, \"failCount should be greater than or equal to 0\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(2, \"response data should contain 2 users\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=2",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_LargeFetchLimitFilter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test with very high values for fetch_limit to check the system has validation for this parameter.\", function () {\r",
+							"  \r",
+							"  pm.expect(pm.response.text()).to.equal(\"fetch_limit must be less than or equal to 100\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=1000000",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "1000000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FetchLimitAndFailCountFilters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test using a combination of fetch_limit and fail_count parameters to verify that the endpoint correctly applies multiple filters.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"userName should not be empty\");\r",
+							"    pm.expect(data.failCount).to.greaterThan(2, \"failCount should be greater than or equal to 3\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(4, \"response data should contain 4 users\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=4&fail_count=3",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "4"
+						},
+						{
+							"key": "fail_count",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FetchLimitAndUserNameFilters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test using a combination of fetch_limit and user_name parameters to verify that the endpoint correctly applies multiple filters.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.equal(\"Joe\", \"user name should be Joe\");\r",
+							"    pm.expect(data.failCount).to.greaterThan(-1, \"failCount should be greater than or equal to 0\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(1, \"response data should contain 1 user\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=4&user_name=Joe",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "4"
+						},
+						{
+							"key": "user_name",
+							"value": "Joe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FailCountAndUserNameFilters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test using a combination of fail_count and user_name parameters to verify that the endpoint correctly applies multiple filters.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.equal(\"Joe\", \"user name should be Joe\");\r",
+							"    pm.expect(data.failCount).to.be.equal(5, \"failCount should be equal equal to 5\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(1, \"response data should contain 1 user\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fail_count=4&user_name=Joe",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fail_count",
+							"value": "4"
+						},
+						{
+							"key": "user_name",
+							"value": "Joe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FailCountAndUserNameAndFetchLimitFilters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test using a combination of fail_count and user_name and fetch_limit parameters to verify that the endpoint correctly applies multiple filters.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(data) {\r",
+							"    pm.expect(data.userName).to.be.equal(\"Joe\", \"user name should be Joe\");\r",
+							"    pm.expect(data.failCount).to.be.equal(5, \"failCount should be equal equal to 5\");\r",
+							"  });\r",
+							"\r",
+							"  pm.expect(responseData.length).to.equal(1, \"response data should contain 1 user\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fail_count=4&user_name=Joe&fetch_limit=2",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fail_count",
+							"value": "4"
+						},
+						{
+							"key": "user_name",
+							"value": "Joe"
+						},
+						{
+							"key": "fetch_limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_UserNameFilter_InvalidUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the endpoint returns empty array for not existing user.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  pm.expect(responseData.length).to.equal(0, \"response data should not contain any user\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?user_name=ABC",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "user_name",
+							"value": "ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FetchLimit_InvalidFetchLimit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the endpoint returns error for invalid fetch_limit parameter\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.errors.fetch_limit[0]).to.equal(\"The value 'ABC' is not valid.\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=ABC",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FailCount_InvalidFailCount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the endpoint returns error for invalid fail_count parameter\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.errors.fail_count[0]).to.equal(\"The value 'ABC' is not valid.\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fail_count=ABC",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fail_count",
+							"value": "ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FetchLimit_TooBigFetchLimit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test with very high values for fetch_limit to check the system performance and handling of large data sets.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.errors.fetch_limit[0]).to.equal(\"The value '100000000000000000' is not valid.\", \"fetch_limit error is incorrect\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fetch_limit=100000000000000000",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fetch_limit",
+							"value": "100000000000000000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_FailCount_TooBigFailCount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test with very high values for fail_count to check the system performance and handling of large data sets.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.errors.fail_count[0]).to.equal(\"The value '100000000000000000' is not valid.\", \"fail_count error is incorrect\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?fail_count=100000000000000000",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "fail_count",
+							"value": "100000000000000000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_WithoutApiKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ApiKey is not provided\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.title).to.equal(\"Unauthorized\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_WithInvalidApiKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ApiKey is not provided\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.title).to.equal(\"Unauthorized\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "123",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginFailTotal_UserNameFilter_SqlInjection",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the endpoint returns empty array for not existing user.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  pm.expect(responseData.length).to.equal(0, \"response data should not contain any user and should not drop database\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/loginfailtotal?user_name=%3BDROP%20DATABASE%20dbo.LarryDb%3B",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"loginfailtotal"
+					],
+					"query": [
+						{
+							"key": "user_name",
+							"value": "%3BDROP%20DATABASE%20dbo.LarryDb%3B"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"After resetting, a subsequent GET request should confirm that the failed login count has been reset\", (done) => {\r",
+							"    pm.sendRequest({\r",
+							"        url:  pm.environment.get(\"BaseUrl\") + \"/loginfailtotal?user_name=Joe\", \r",
+							"        method: 'GET',\r",
+							"        header: {\r",
+							"            'content-type': 'application/json',\r",
+							"            'ApiKey': pm.environment.get(\"ApiKey\"),\r",
+							"            'Accept': \"*/*\"\r",
+							"        },\r",
+							"    }, (err, res) => {\r",
+							"        pm.expect(res.code).to.equal(200);\r",
+							"        const responseData = res.json();\r",
+							"        pm.expect(responseData[0].failCount).to.equal(0, \"failCount should be 0\");\r",
+							"        pm.expect(responseData[0].userName).to.equal(\"Joe\", \"userName should be Joe\");\r",
+							"\r",
+							"        done();\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"Joe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_WithoutApiKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ApiKey is not provided\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.title).to.equal(\"Unauthorized\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"Joe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_WithInvalidApiKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ApiKey is not provided\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.title).to.equal(\"Unauthorized\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "test",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"Joe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_NoParameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Attempt to reset the failed login count without specifying a Username to verify that the endpoint does not proceed with the action and returns a suitable error message.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData.errors.user_name[0]).to.equal(\"The user_name field is required.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_InvalidParameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test with invalid (not existing) user_name to ensure the system handles it correctly.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData.title).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"ABC\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResetLoginFailTotal_SqlInjection",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test for SQL injection vulnerability through the Username parameter.\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData.title).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "ApiKey",
+						"value": "{{ApiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"; DROP DATABASE dbo.LarryDb;--\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/resetloginfailtotal",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"resetloginfailtotal"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ApiKey",
+			"value": "qwerty\n",
+			"type": "string"
+		}
+	]
+}
